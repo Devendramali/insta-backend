@@ -19,7 +19,7 @@ app.use(cors({
   }));
   const allowedOrigins = [
     "http://localhost:5173",
-    "https://instagram-login-silk.vercel.app"
+    "https://instagram-front-taupe.vercel.app/"
   ];  
 app.use(express.json());
 app.use((req, res, next) => {
