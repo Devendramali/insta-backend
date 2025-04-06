@@ -7,12 +7,20 @@ const LoginModel = require('./models/Login');
 const app = express();
 
 // ✅ CORS config
-const corsOptions = {
-  methods: ['GET', 'POST'],
-  credentials: true,
-  allowedHeaders: ['Content-Type']
-};
-app.use(cors(corsOptions));
+app.use(cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true // if you're using cookies or auth headers
+  }));
+  const allowedOrigins = [
+    "http://localhost:5173",
+    "https://instagram-login-silk.vercel.app"
+  ];  
 app.use(express.json());
 app.use((req, res, next) => {
     console.log("Request received from:", req.headers.origin);
@@ -31,7 +39,7 @@ app.get('/', (req, res) => {
 });
 
 // ✅ Login logic
-app.post('https://insta-backend-4-yadw.onrender.com/login', async (req, res) => {
+app.post('/login', async (req, res) => {
   const { name, password } = req.body;
 
   try {
