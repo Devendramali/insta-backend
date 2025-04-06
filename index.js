@@ -8,7 +8,6 @@ const app = express();
 
 // ✅ Allowed origins
 const allowedOrigins = [
-  "http://localhost:5173",
   "https://instagram-front-taupe.vercel.app"
 ];
 
